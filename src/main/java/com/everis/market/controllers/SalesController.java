@@ -1,5 +1,8 @@
 package com.everis.market.controllers;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,9 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.everis.market.models.Sale;
 import com.everis.market.services.SaleService;
-
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class SalesController {
@@ -39,17 +39,12 @@ public class SalesController {
 	}
 
 	/**
-	 * Retorna la pagina de registro
+	 * Retorna la pagina de registro, le agrega el usuario creador
 	 */
 	@RequestMapping("/sales/create")
-	public String create(@RequestParam(value = "buyer") String buyer, @RequestParam(value = "total") String total,
-			Model model) {
-		// crear usuario y retorna id
-		Sale sale = new Sale();
-		sale.setBuyer(buyer);
-		sale.setTotal(Long.parseLong(total));
-
-		Sale inserted = saleService.saveSale(sale);
+	public String create(Model model) {
+		Long userId = (long) 1; // cambiar esto
+		Sale inserted = saleService.createSale(userId);
 		String saleId = Long.toString(inserted.getId());
 		return "redirect:/sales/show/" + saleId;
 	}
@@ -63,7 +58,6 @@ public class SalesController {
 		if (saleExists != null) {
 			Sale sale = saleExists.get();
 			model.addAttribute("buyer", sale.getBuyer());
-			model.addAttribute("total", sale.getTotal());
 			return "sale/edit.jsp";
 		}
 		return "sale/list.jsp";
@@ -79,8 +73,6 @@ public class SalesController {
 		Optional<Sale> saleExists = saleService.findById(id);
 		if (saleExists != null) {
 			Sale sale = saleExists.get();
-			sale.setBuyer(buyer);
-			sale.setTotal(Long.parseLong(total));
 
 			saleService.saveSale(sale);
 			String saleId = Long.toString(id);
@@ -92,27 +84,27 @@ public class SalesController {
 	}
 
 	/**
-	 * Retorna la pagina de mostrar usuario
+	 * Retorna la pagina de mostrar venta
 	 */
 	@RequestMapping("/sales/show/{id}")
 	public String show(@PathVariable Long id, Model model) {
 		Optional<Sale> saleExists = saleService.findById(id);
 		if (saleExists != null) {
 			Sale sale = saleExists.get();
-			model.addAttribute("buyer", sale.getBuyer());
+			model.addAttribute("buyer", sale.getBuyer().getName());
 			model.addAttribute("createdAt", sale.getCreatedAt());
-			model.addAttribute("total", sale.getTotal());
 			return "sale/show.jsp";
 		}
 		return "redirect:/sales";
 	}
 
 	/**
-	 * Elimina usuario y vuelve a la lista
+	 * Añade el producto a la venta
 	 */
-	@RequestMapping("/sales/delete/{id}")
-	public String del(@PathVariable Long id, Model model) {
-		saleService.deleteById(id);
-		return "redirect:/sales";
+	@RequestMapping("/sales/{saleId}/product/{productId}")
+	public String addProduct(@PathVariable Long productId, @PathVariable Long saleId, Model model) {
+		saleService.addProductToSale(productId, saleId);
+		return "redirect:/sales/show/" + Long.toString(saleId);
 	}
+
 }

@@ -2,7 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,7 +23,6 @@
 					<tr>
 						<th scope="col">ID</th>
 						<th scope="col">Nombre comprador</th>
-						<th scope="col">Precio total</th>
 						<th scope="col">Fecha</th>
 						<th scope="col">Opciones</th>
 					</tr>
@@ -32,9 +31,9 @@
 					<c:forEach items="${allSales}" var="entry">
 						<tr>
 							<th scope="row">${entry.id}</th>
-							<td>${entry.buyer}</td>
-							<td>${entry.total}</td>
-							<td><fmt:formatDate type = "both" value = "${entry.createdAt}" /></p></td>
+							<td>${entry.buyer.getName()}</td>
+							<td><fmt:formatDate type="both" value="${entry.createdAt}" />
+								</p></td>
 							<td class="button-group" role="group"><a
 								href="/sales/show/${entry.id}" class="btn btn-primary">Ver</a> <a
 								href="/sales/edit/${entry.id}" class="btn btn-secondary">Editar</a>

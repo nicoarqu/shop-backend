@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,52 +17,34 @@
 </head>
 <body>
 	<div class="container col-md-10 mt-3">
-		<div class="row">
-			<form class="input-group mb-3" action="/products/name">
-				<input type="search" class="form-control" name="name"
-					placeholder="Buscar por nombre">
-				<div class="input-group-append">
-					<button class="btn btn-secondary" type="submit">Buscar</button>
-				</div>
-			</form>
-		</div>
+		<h4>Categorías</h4>
 		<div class="row">
 			<table class="table table-striped">
 				<thead>
 					<tr>
 						<th scope="col">ID</th>
 						<th scope="col">Nombre</th>
-						<th scope="col">Codigo</th>
-						<th scope="col">Precio</th>
 						<th scope="col">Opciones</th>
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach items="${products}" var="entry">
+					<c:forEach items="${allCategories}" var="entry">
 						<tr>
 							<th scope="row">${entry.id}</th>
 							<td>${entry.name}</td>
-							<td>${entry.code}</td>
-							<td>${entry.price}</td>
 							<td class="button-group" role="group"><a
-								href="/products/show/${entry.id}" class="btn btn-primary">Ver</a>
-								<a href="/products/edit/${entry.id}" class="btn btn-secondary">Editar</a>
-								<a href="/products/delete/${entry.id}" class="btn btn-danger">Eliminar</a>
-								<a href="sales/1/product/${entry.id}" class="btn btn-primary">Añadir
-									a lista</a>
+								href="/admin/categories/delete/${entry.id}"
+								class="btn btn-danger">Eliminar</a></td>
 						</tr>
 					</c:forEach>
 
 				</tbody>
 			</table>
-			<c:forEach begin="1" end="${totalPages}" var="index">
-				<a href="/products/page/${index}">pág. : ${index}</a>
-			</c:forEach>
 		</div>
 
 		<div class="row">
 			<div class="col-md-4">
-				<a href="/products/new" class="btn btn-success">Agregar producto</a>
+				<a href="/admin/categories/new" class="btn btn-success">Agregar categoría</a>
 			</div>
 		</div>
 	</div>

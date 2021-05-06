@@ -7,14 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.everis.market.models.User;
+import com.everis.market.repositories.RoleRepository;
 import com.everis.market.repositories.UserRepository;
 
 @Service
 public class UserService {
 	@Autowired
 	UserRepository userRepository;
+	@Autowired
+	RoleRepository roleRepository;
 
+	// CRUD
 	public User saveUser(User user) {
+		String role = "USER";
+		user.addRole(roleRepository.findByName(role));
 		return userRepository.save(user);
 	}
 
@@ -45,6 +51,10 @@ public class UserService {
 
 	public void deleteById(Long id) {
 		userRepository.deleteById(id);
+	}
+
+	public User findByEmail(String email) {
+		return userRepository.findByEmailContaining(email).get(0);
 	}
 
 }

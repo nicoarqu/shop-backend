@@ -1,16 +1,15 @@
 package com.everis.market.repositories;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.everis.market.models.Sale;
+import com.everis.market.models.Role;
 
 @Repository
-public interface SaleRepository extends JpaRepository<Sale, Long> {
-	List<Sale> findAll();
+public interface RoleRepository extends JpaRepository<Role, Long> {
+	List<Role> findAll();
 
-	Optional<Sale> findById(Long id);
+	Role findByName(String name);
 }

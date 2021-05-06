@@ -23,7 +23,6 @@
 						<th scope="col">Nombre</th>
 						<th scope="col">Correo</th>
 						<th scope="col">Dirección</th>
-						<th scope="col">Contraseña</th>
 						<th scope="col">Opciones</th>
 					</tr>
 				</thead>
@@ -34,7 +33,6 @@
 							<td>${entry.name}</td>
 							<td>${entry.email}</td>
 							<td>${entry.address}</td>
-							<td>${entry.password}</td>
 							<td class="button-group" role="group"><a
 								href="/users/show/${entry.id}" class="btn btn-primary">Ver</a> <a
 								href="/users/edit/${entry.id}" class="btn btn-secondary">Editar</a>

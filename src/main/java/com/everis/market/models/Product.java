@@ -1,13 +1,16 @@
 package com.everis.market.models;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "products")
@@ -15,27 +18,45 @@ public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Size(min = 4, max = 40)
 	private String name;
-	@Size(min = 2, max = 30)
 	private String code;
-	@Min(3)
-	@Max(999999)
 	private Long price;
+	private String description;
+	private String url;
+
+	// relaciones
+	// relaciones productos comprados en cada venta
+	@ManyToMany(mappedBy = "cart_products")
+	private Set<Sale> shop_sales = new HashSet<>();
+	// relaciones productos con categorias
+	@ManyToMany
+	@JoinTable(name = "categories_products", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+	private Set<Category> categories = new HashSet<>();
 
 	// constructores
 	public Product() {
 	}
 
-	public Product(@Size(min = 4, max = 40) String name, @Size(min = 2, max = 30) String code,
-			@Min(3) @Max(999999) Long price) {
+	public Product(String name, String code, Long price, String description) {
 		super();
 		this.name = name;
 		this.code = code;
 		this.price = price;
+		this.description = description;
+	}
+
+	// con URL
+	public Product(String name, String code, Long price, String description, String url) {
+		super();
+		this.name = name;
+		this.code = code;
+		this.price = price;
+		this.description = description;
+		this.url = url;
 	}
 
 	// getters, setters
+
 	public Long getId() {
 		return id;
 	}
@@ -66,6 +87,56 @@ public class Product {
 
 	public void setPrice(Long price) {
 		this.price = price;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public Set<Sale> getCart_products() {
+		return shop_sales;
+	}
+
+	public void setCart_products(Set<Sale> cart_products) {
+		this.shop_sales = cart_products;
+	}
+
+	public Set<Sale> getShop_sales() {
+		return shop_sales;
+	}
+
+	public void setShop_sales(Set<Sale> shop_sales) {
+		this.shop_sales = shop_sales;
+	}
+
+	public Set<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(Set<Category> categories) {
+		this.categories = categories;
+	}
+
+	// agrega venta a producto
+	public void addSale(Sale sale) {
+		this.shop_sales.add(sale);
+	}
+
+	// agrega categoria a producto
+	public void addCategory(Category category) {
+		this.categories.add(category);
 	}
 
 }

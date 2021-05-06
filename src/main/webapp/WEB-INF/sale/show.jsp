@@ -2,7 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,12 +18,13 @@
 <body>
 	<div class="container col-md-6 mt-3">
 		<nav
-			style="-bs-breadcrumb-divider: url(&amp; amp; #34; data: image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&amp;amp;#34;);"
+			style="-bs-breadcrumb-divider: url(&amp; amp; amp; amp; #34; data: image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&amp;amp;"
 			aria-label="breadcrumb">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="/sales">Ventas</a></li>
-				<li class="breadcrumb-item active" aria-current="page"><c:out
-						value="${buyer}"></c:out></li>
+				<li class="breadcrumb-item active" aria-current="page">Comprador:
+					<c:out value="${buyer}"></c:out>
+				</li>
 			</ol>
 		</nav>
 		<div class="card text-center">
@@ -33,11 +34,12 @@
 				</h5>
 				<p class="card-text">
 					Creada en:
-					<fmt:formatDate type = "both" value = "${createdAt}" /></p>
+					<fmt:formatDate type="both" value="${createdAt}" />
 				</p>
 			</div>
 			<div class="card-footer text-muted">
-				Precio total: $ <c:out value="${total}"></c:out>
+				Precio total: $
+				<c:out value="${total}"></c:out>
 			</div>
 		</div>
 	</div>

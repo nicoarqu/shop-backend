@@ -16,10 +16,10 @@
 <body>
 	<div class="container col-md-6 mt-3">
 		<nav
-			style="-bs-breadcrumb-divider: url(&amp; amp; #34; data: image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&amp;amp;#34;);"
+			style="-bs-breadcrumb-divider: url(&amp; amp; amp; amp; amp; #34; data: image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&amp;amp;"
 			aria-label="breadcrumb">
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/users">Usuarios</a></li>
+				<li class="breadcrumb-item"><a href="/">Inicio</a></li>
 				<li class="breadcrumb-item active" aria-current="page"><c:out
 						value="${name}"></c:out></li>
 			</ol>
@@ -32,6 +32,11 @@
 				<p class="card-text">
 					Correo:
 					<c:out value="${email}"></c:out>
+
+				</p>
+				<p class="card-text">
+					<a href="/users/buy/${userId}" class="btn btn-primary">Ver
+						productos</a>
 				</p>
 			</div>
 			<div class="card-footer text-muted">

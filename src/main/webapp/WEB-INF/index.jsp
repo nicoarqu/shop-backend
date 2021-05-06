@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,9 +20,10 @@
 	<div class="container mt-3">
 		<h2 class="h2">Tienda virtual</h2>
 		<div class="container mt-3">
-		<a href="/users" class="btn btn-primary">Ver usuarios</a>
-		<a href="/products" class="btn btn-secondary">Ver productos</a>
-		<a href="/sales" class="btn btn-success">Ver ventas</a>
+		<a href="/users/signin" class="btn btn-secondary">Iniciar sesión</a>
+		<c:if test="${sessionScope.userLogged == 0}">
+			<a href="/users/new" class="btn btn-primary">Registrarme</a>
+		</c:if>
 		</div>
 		
 	</div>

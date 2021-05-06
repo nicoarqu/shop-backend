@@ -6,13 +6,28 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.everis.market.models.Product;
 import com.everis.market.models.Sale;
+import com.everis.market.models.User;
+import com.everis.market.repositories.ProductRepository;
 import com.everis.market.repositories.SaleRepository;
+import com.everis.market.repositories.UserRepository;
 
 @Service
 public class SaleService {
 	@Autowired
 	SaleRepository saleRepository;
+	@Autowired
+	ProductRepository productRepository;
+	@Autowired
+	UserRepository userRepository;
+
+	public Sale createSale(Long userId) {
+		Sale sale = new Sale();
+		User buyer = userRepository.findById(userId).get();
+		sale.setBuyer(buyer);
+		return saleRepository.save(sale);
+	}
 
 	public Sale saveSale(Sale sale) {
 		return saleRepository.save(sale);
@@ -27,22 +42,13 @@ public class SaleService {
 	}
 
 	/**
-	 * Editar usuario por atributos, retorna true si se modifica
+	 * Guardar producto en lista de compras
 	 */
-	public boolean editById(Long id, String buyer, String total) {
-		Optional<Sale> saleExists = saleRepository.findById(id);
-		boolean modified = false;
-		if (saleExists != null) {
-			Sale sale = saleExists.get();
-			sale.setBuyer(buyer);
-			sale.setTotal(Integer.valueOf(total));
-			modified = true;
-		}
-		return modified;
-	}
-
-	public void deleteById(Long id) {
-		saleRepository.deleteById(id);
+	public Sale addProductToSale(Long productId, Long saleId) {
+		Product product = productRepository.findById(productId).get();
+		Sale sale = saleRepository.findById(saleId).get();
+		sale.addProduct(product);
+		return saleRepository.save(sale);
 	}
 
 }
