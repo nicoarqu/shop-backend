@@ -13,6 +13,9 @@
 	integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
 	crossorigin="anonymous">
 </head>
+<%
+Integer currentRole = (Integer) session.getAttribute("currentRole");
+%>
 <body>
 	<div class="container col-md-10 mt-3">
 		<div class="row">
@@ -44,23 +47,34 @@
 							<td>${entry.price}</td>
 							<td class="button-group" role="group"><a
 								href="/products/show/${entry.id}" class="btn btn-primary">Ver</a>
-								<a href="/products/edit/${entry.id}" class="btn btn-secondary">Editar</a>
-								<a href="/products/delete/${entry.id}" class="btn btn-danger">Eliminar</a>
-								<a href="sales/1/product/${entry.id}" class="btn btn-primary">Añadir
+								<c:if test="${currentRole == 2}">
+									<a href="/products/edit/${entry.id}" class="btn btn-secondary">Editar</a>
+									<a href="/products/delete/${entry.id}" class="btn btn-danger">Eliminar</a>
+								</c:if> <a href="/sales/product/${entry.id}" class="btn btn-success">Añadir
 									a lista</a>
 						</tr>
 					</c:forEach>
 
 				</tbody>
 			</table>
-			<c:forEach begin="1" end="${totalPages}" var="index">
-				<a href="/products/page/${index}">pág. : ${index}</a>
-			</c:forEach>
+			<nav aria-label="Page navigation example">
+				<ul class="pagination">
+					<c:forEach begin="1" end="${totalPages}" var="index">
+						<li class="page-item"><a class="page-link"
+							href="/products/page/${index}">${index}</a></li>
+					</c:forEach>
+				</ul>
+			</nav>
 		</div>
 
 		<div class="row">
 			<div class="col-md-4">
-				<a href="/products/new" class="btn btn-success">Agregar producto</a>
+				<c:if test="${currentRole == 2}">
+					<a href="/products/new" class="btn btn-success">Agregar
+						producto</a>
+					<a href="/sales" class="btn btn-primary">Ver ventas</a>
+				</c:if>
+
 			</div>
 		</div>
 	</div>

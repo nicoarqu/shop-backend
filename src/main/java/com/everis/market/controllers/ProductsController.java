@@ -3,6 +3,8 @@ package com.everis.market.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -24,7 +26,7 @@ public class ProductsController {
 	ProductService productService;
 	@Autowired
 	CategoryService categoryService;
-	
+
 	private static final int CANT_PRODUCTOS = 2;
 
 	/**
@@ -33,24 +35,23 @@ public class ProductsController {
 	@RequestMapping("/products")
 	public String index(Model model) {
 		List<Product> allProducts = productService.allProducts();
-		Page<Product> products = productService.productosPaginados(0, CANT_PRODUCTOS);	
-		int totalPages= products.getTotalPages();
+		Page<Product> products = productService.productosPaginados(0, CANT_PRODUCTOS);
+		int totalPages = products.getTotalPages();
 		model.addAttribute("allProducts", allProducts);
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("products", products.getContent());
-		
+
 		return "product/list.jsp";
 	}
-	
+
 	/**
 	 * Paginacion por pageNumber
-	 * */
+	 */
 	@RequestMapping("/products/page/{pageNumber}")
-	public String getProductosPagina(@PathVariable("pageNumber") int pageNumber,
-			Model model) {
-		//paginas iterable comienzan en 0 cero. 1 a maxPag (ultima pagina)
-		Page<Product> products= productService.productosPaginados(pageNumber-1, CANT_PRODUCTOS);
-		int totalPages= products.getTotalPages();
+	public String getProductosPagina(@PathVariable("pageNumber") int pageNumber, Model model) {
+		// paginas iterable comienzan en 0 cero. 1 a maxPag (ultima pagina)
+		Page<Product> products = productService.productosPaginados(pageNumber - 1, CANT_PRODUCTOS);
+		int totalPages = products.getTotalPages();
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("products", products.getContent());
 
@@ -71,9 +72,14 @@ public class ProductsController {
 	 * Retorna la pagina de registro
 	 */
 	@RequestMapping("/products/new")
-	public String newProduct(Model model) {
+	public String newProduct(HttpSession session, Model model) {
+		Integer currentRole = (Integer) session.getAttribute("currentRole");
+		if (currentRole <= 1) {
+			return "redirect:/products";
+		}
 		model.addAttribute("categories", categoryService.allCategorys());
 		return "product/new.jsp";
+
 	}
 
 	/**
@@ -82,7 +88,11 @@ public class ProductsController {
 	@RequestMapping("/products/create")
 	public String create(@RequestParam(value = "name") String name, @RequestParam(value = "code") String code,
 			@RequestParam(value = "price") String price, @RequestParam(value = "description") String description,
-			@RequestParam("categories") String[] categoryIds, Model model) {
+			@RequestParam("categories") String[] categoryIds, HttpSession session, Model model) {
+		Integer currentRole = (Integer) session.getAttribute("currentRole");
+		if (currentRole <= 1) {
+			return "redirect:/products";
+		}
 		Product product = new Product(name, code, Long.parseLong(price), description);
 		Product inserted = productService.saveProduct(product, categoryIds);
 		String productId = Long.toString(inserted.getId());
@@ -93,7 +103,11 @@ public class ProductsController {
 	 * Retorna la pagina de editar product
 	 */
 	@RequestMapping("/products/edit/{id}")
-	public String edit(@PathVariable Long id, Model model) {
+	public String edit(@PathVariable Long id, HttpSession session, Model model) {
+		Integer currentRole = (Integer) session.getAttribute("currentRole");
+		if (currentRole <= 1) {
+			return "redirect:/products";
+		}
 		Optional<Product> productExists = productService.findById(id);
 		if (productExists != null) {
 			Product product = productExists.get();
@@ -111,7 +125,12 @@ public class ProductsController {
 	 * Edita producto, devuelve la vista de producto
 	 */
 	@RequestMapping("/products/update/{id}")
-	public String update(@ModelAttribute("product") Product prod, @PathVariable Long id, @RequestParam("categories") String[] categoryIds) {
+	public String update(@ModelAttribute("product") Product prod, @PathVariable Long id,
+			@RequestParam("categories") String[] categoryIds, HttpSession session, Model model) {
+		Integer currentRole = (Integer) session.getAttribute("currentRole");
+		if (currentRole <= 1) {
+			return "redirect:/products";
+		}
 		Optional<Product> productExists = productService.findById(id);
 		if (productExists != null) {
 			productService.saveProduct(prod, categoryIds);
@@ -144,7 +163,11 @@ public class ProductsController {
 	 * Elimina producto y vuelve a la lista
 	 */
 	@RequestMapping("/products/delete/{id}")
-	public String del(@PathVariable Long id, Model model) {
+	public String del(@PathVariable Long id, HttpSession session, Model model) {
+		Integer currentRole = (Integer) session.getAttribute("currentRole");
+		if (currentRole <= 1) {
+			return "redirect:/products";
+		}
 		productService.deleteById(id);
 		return "redirect:/products";
 	}

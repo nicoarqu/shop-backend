@@ -114,7 +114,7 @@ public class Product {
 	}
 
 	public Set<Sale> getShop_sales() {
-		return shop_sales;
+		return this.shop_sales;
 	}
 
 	public void setShop_sales(Set<Sale> shop_sales) {
@@ -122,7 +122,7 @@ public class Product {
 	}
 
 	public Set<Category> getCategories() {
-		return categories;
+		return this.categories;
 	}
 
 	public void setCategories(Set<Category> categories) {

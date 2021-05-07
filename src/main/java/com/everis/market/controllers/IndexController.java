@@ -13,8 +13,15 @@ public class IndexController {
 	 * Retorna la pagina principal
 	 */
 	@RequestMapping("/")
-	public String inicio(HttpSession session, Model model) {
-		session.setAttribute("userLogged", 0);
+	public String inicio(Model model) {
+		return "index.jsp";
+	}
+	
+	@RequestMapping("/logout")
+	public String logout(HttpSession session, Model model) {
+		session.setAttribute("currentRole", 0);
+		session.removeAttribute("currentUserId");
+		session.removeAttribute("currentSale");
 		return "index.jsp";
 	}
 

@@ -21,6 +21,12 @@ public class UserService {
 	public User saveUser(User user) {
 		String role = "USER";
 		user.addRole(roleRepository.findByName(role));
+		// primer usuario es Admin
+		Long cantidad = userRepository.count();
+		if (cantidad == 1) {
+			role = "ADMIN";
+			user.addRole(roleRepository.findByName(role));
+		}
 		return userRepository.save(user);
 	}
 

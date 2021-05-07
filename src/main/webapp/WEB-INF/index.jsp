@@ -20,12 +20,15 @@
 	<div class="container mt-3">
 		<h2 class="h2">Tienda virtual</h2>
 		<div class="container mt-3">
-		<a href="/users/signin" class="btn btn-secondary">Iniciar sesión</a>
-		<c:if test="${sessionScope.userLogged == 0}">
-			<a href="/users/new" class="btn btn-primary">Registrarme</a>
-		</c:if>
+			<c:if test="${sessionScope.currentRole == 0}">
+				<a href="/users/new" class="btn btn-primary">Registrarme</a>
+				<a href="/users/signin" class="btn btn-secondary">Iniciar sesión</a>
+			</c:if>
+			<c:if test="${sessionScope.currentRole > 0}">
+				<a href="/logout" class="btn btn-secondary">Cerrar sesión</a>
+			</c:if>
 		</div>
-		
+
 	</div>
 
 </body>

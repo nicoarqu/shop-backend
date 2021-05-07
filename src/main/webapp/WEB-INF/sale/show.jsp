@@ -18,10 +18,10 @@
 <body>
 	<div class="container col-md-6 mt-3">
 		<nav
-			style="-bs-breadcrumb-divider: url(&amp; amp; amp; amp; #34; data: image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&amp;amp;"
+			style="-bs-breadcrumb-divider: url(&amp; amp; amp; amp; amp; amp; amp; #34; data: image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&amp;amp;"
 			aria-label="breadcrumb">
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/sales">Ventas</a></li>
+				<li class="breadcrumb-item"><a href="/products">Volver a productos</a></li>
 				<li class="breadcrumb-item active" aria-current="page">Comprador:
 					<c:out value="${buyer}"></c:out>
 				</li>
@@ -30,12 +30,30 @@
 		<div class="card text-center">
 			<div class="card-body">
 				<h5 class="card-title">
-					<c:out value="${buyer}"></c:out>
+					Compra de <c:out value="${buyer}"></c:out>
 				</h5>
 				<p class="card-text">
 					Creada en:
 					<fmt:formatDate type="both" value="${createdAt}" />
 				</p>
+				<div>
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col">Producto</th>
+								<th scope="col">Precio</th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:forEach items="${cartProducts}" var="categ">
+								<tr>
+									<td>${categ.name}</td>
+									<td>$ ${categ.price}</td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+				</div>
 			</div>
 			<div class="card-footer text-muted">
 				Precio total: $

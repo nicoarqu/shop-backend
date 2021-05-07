@@ -45,12 +45,6 @@
 				</tbody>
 			</table>
 		</div>
-
-		<div class="row">
-			<div class="col-md-4">
-				<a href="/sales/new" class="btn btn-success">Agregar venta</a>
-			</div>
-		</div>
 	</div>
 </body>
 </html>

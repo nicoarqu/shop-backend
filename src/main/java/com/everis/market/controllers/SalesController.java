@@ -1,7 +1,10 @@
 package com.everis.market.controllers;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.everis.market.models.Product;
 import com.everis.market.models.Sale;
 import com.everis.market.services.SaleService;
 
@@ -24,7 +28,11 @@ public class SalesController {
 	 * Retorna todos los usuarios
 	 */
 	@RequestMapping("/sales")
-	public String index(Model model) {
+	public String index(HttpSession session, Model model) {
+		Integer currentRole = (Integer) session.getAttribute("currentRole");
+		if (currentRole <= 1) {
+			return "redirect:/products";
+		}
 		List<Sale> allSales = saleService.allSales();
 		model.addAttribute("allSales", allSales);
 		return "sale/list.jsp";
@@ -34,7 +42,11 @@ public class SalesController {
 	 * Retorna la pagina de registro
 	 */
 	@RequestMapping("/sales/new")
-	public String newSale(Model model) {
+	public String newSale(HttpSession session, Model model) {
+		Integer currentRole = (Integer) session.getAttribute("currentRole");
+		if (currentRole <= 1) {
+			return "redirect:/products";
+		}
 		return "sale/new.jsp";
 	}
 
@@ -42,7 +54,11 @@ public class SalesController {
 	 * Retorna la pagina de registro, le agrega el usuario creador
 	 */
 	@RequestMapping("/sales/create")
-	public String create(Model model) {
+	public String create(HttpSession session, Model model) {
+		Integer currentRole = (Integer) session.getAttribute("currentRole");
+		if (currentRole <= 1) {
+			return "redirect:/products";
+		}
 		Long userId = (long) 1; // cambiar esto
 		Sale inserted = saleService.createSale(userId);
 		String saleId = Long.toString(inserted.getId());
@@ -53,7 +69,11 @@ public class SalesController {
 	 * Retorna la pagina de registro
 	 */
 	@RequestMapping("/sales/edit/{id}")
-	public String edit(@PathVariable Long id, Model model) {
+	public String edit(@PathVariable Long id, HttpSession session, Model model) {
+		Integer currentRole = (Integer) session.getAttribute("currentRole");
+		if (currentRole <= 1) {
+			return "redirect:/products";
+		}
 		Optional<Sale> saleExists = saleService.findById(id);
 		if (saleExists != null) {
 			Sale sale = saleExists.get();
@@ -69,7 +89,11 @@ public class SalesController {
 	 */
 	@RequestMapping("/sales/update/{id}")
 	public String update(@RequestParam(value = "buyer") String buyer, @RequestParam(value = "total") String total,
-			@PathVariable Long id, Model model) {
+			@PathVariable Long id, HttpSession session, Model model) {
+		Integer currentRole = (Integer) session.getAttribute("currentRole");
+		if (currentRole <= 1) {
+			return "redirect:/products";
+		}
 		Optional<Sale> saleExists = saleService.findById(id);
 		if (saleExists != null) {
 			Sale sale = saleExists.get();
@@ -87,12 +111,20 @@ public class SalesController {
 	 * Retorna la pagina de mostrar venta
 	 */
 	@RequestMapping("/sales/show/{id}")
-	public String show(@PathVariable Long id, Model model) {
+	public String show(@PathVariable Long id, Model model, HttpSession session) {
 		Optional<Sale> saleExists = saleService.findById(id);
 		if (saleExists != null) {
 			Sale sale = saleExists.get();
 			model.addAttribute("buyer", sale.getBuyer().getName());
 			model.addAttribute("createdAt", sale.getCreatedAt());
+			model.addAttribute("cartProducts", sale.getProducts());
+			// guardo venta actual
+			session.setAttribute("currentSale", sale.getId());
+			int total = 0;
+			for (Product p : sale.getProducts()) {
+				total += p.getPrice();
+			}
+			model.addAttribute("total", total);
 			return "sale/show.jsp";
 		}
 		return "redirect:/sales";
@@ -101,8 +133,9 @@ public class SalesController {
 	/**
 	 * Añade el producto a la venta
 	 */
-	@RequestMapping("/sales/{saleId}/product/{productId}")
-	public String addProduct(@PathVariable Long productId, @PathVariable Long saleId, Model model) {
+	@RequestMapping("/sales/product/{productId}")
+	public String addProduct(@PathVariable Long productId, HttpSession session, Model model) {
+		Long saleId = (Long) session.getAttribute("currentSale");
 		saleService.addProductToSale(productId, saleId);
 		return "redirect:/sales/show/" + Long.toString(saleId);
 	}

@@ -27,9 +27,7 @@ public class ProductService {
 	public Product saveProduct(Product product, String[] categoryIds) {
 		// agrega listado de categorias
 		for (String id : categoryIds) {
-			System.out.println(Long.valueOf(id));
 			Category categ = categoryRepository.findById(Long.valueOf(id)).get();
-			System.out.println(categ.getName());
 			product.addCategory(categ);
 		}
 		return productRepository.save(product);

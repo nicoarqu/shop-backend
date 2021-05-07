@@ -56,7 +56,7 @@ public class UsersController {
 	@RequestMapping("/users/create")
 	public String create(@RequestParam(value = "name") String name, @RequestParam(value = "email") String email,
 			@RequestParam(value = "password") String password, @RequestParam(value = "address") String address,
-			Model model) {
+			HttpSession session, Model model) {
 		// crear usuario y retorna id
 		User user = new User();
 		user.setName(name);
@@ -65,6 +65,7 @@ public class UsersController {
 		user.setPassword(hashed);
 		user.setEmail(email);
 		user.setAddress(address);
+		session.setAttribute("currentRole", user.getRoles().size());
 
 		User inserted = userService.saveUser(user);
 		String userId = Long.toString(inserted.getId());
@@ -85,18 +86,21 @@ public class UsersController {
 	@RequestMapping("/users/login")
 	public String create(@RequestParam(value = "email") String email, @RequestParam(value = "password") String password,
 			HttpSession session, Model model) {
+		// limpiar session
+		session.removeAttribute("currentRole");
+		session.removeAttribute("currentUserId");
+		session.removeAttribute("currentSale");
+		// buscar user
 		User user = userService.findByEmail(email);
 		// verifica si existe y guarda id en sesión
 		if (BCrypt.checkpw(password, user.getPassword())) {
 			System.out.println("ingresado!!");
 			session.setAttribute("currentUserId", user.getId());
-			session.setAttribute("userLogged", 1);// boolean
+			session.setAttribute("currentRole", user.getRoles().size());
 			return "redirect:/users/show/" + Long.toString(user.getId());
 		}
-		session.removeAttribute("userLogged");
-		session.removeAttribute("currentUserId");
 		model.addAttribute("errorMessage", "Datos erroneos");
-		return "redirect:/users/signin";
+		return "user/signin.jsp";
 	}
 
 	/**
@@ -163,7 +167,7 @@ public class UsersController {
 	 * Ir a comprar
 	 */
 	@RequestMapping("/users/buy/{id}")
-	public String addSale(@PathVariable Long id, Model model) {
+	public String addSale(@PathVariable Long id, HttpSession session, Model model) {
 		Optional<User> userExists = userService.findById(id);
 		User user = userExists.get();
 		Sale sale = new Sale();
@@ -173,6 +177,7 @@ public class UsersController {
 		// guardar en ambas tablas
 		userService.saveUser(user);
 		saleService.saveSale(sale);
+		session.setAttribute("currentSale", sale.getId());
 
 		return "redirect:/products";
 	}
